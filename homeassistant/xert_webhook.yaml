@@ -16,7 +16,7 @@
 
 # Webhook trigger automation that fires events
 automation:
-  - id: xert_webhook_handler
+  - id: 8eb4016e-8f6a-4d7e-a25e-da66bc6ac0f1
     alias: "Xert: Webhook Handler"
     mode: queued
     max: 10
@@ -53,7 +53,7 @@ template:
       root: "{{ d.parsed | default({}) }}"
     sensor:
       - name: Xert Training Info Raw
-        unique_id: xert_training_info_raw_webhook
+        unique_id: 8c4bb4c2-996c-473f-9f21-8f50ed11b63d
         state: "{{ root.success | default(false) }}"
         availability: "{{ available }}"
         attributes:
@@ -75,7 +75,7 @@ template:
       root: "{{ d.parsed | default({}) }}"
     sensor:
       - name: Xert Activity List Raw
-        unique_id: xert_activity_list_raw_webhook
+        unique_id: cdec9bf4-8304-4c2d-b636-0d449e66ae35
         state: "{{ root.success | default(false) }}"
         availability: "{{ available }}"
         attributes:
@@ -85,81 +85,81 @@ template:
   # Derived sensors from Training Info
   - sensor:
       - name: "Xert Training Status"
-        unique_id: xert_training_status_webhook
+        unique_id: 6a58afc0-b60d-407c-9743-64fd9475e05d
         state: "{{ state_attr('sensor.xert_training_info_raw', 'status') or 'Unknown' }}"
         icon: mdi:heart-pulse
 
       - name: "Xert FTP"
-        unique_id: xert_ftp_webhook
+        unique_id: 8331a209-5669-4317-8b81-43d06f6b2dfc
         unit_of_measurement: "W"
         device_class: power
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('ftp', 0) | float(0) | round(0) }}"
 
       - name: "Xert LTP"
-        unique_id: xert_ltp_webhook
+        unique_id: 4d7b5ce2-6002-4670-b9c8-33f94b3099a5
         unit_of_measurement: "W"
         device_class: power
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('ltp', 0) | float(0) | round(0) }}"
 
       - name: "Xert Peak Power"
-        unique_id: xert_peak_power_webhook
+        unique_id: 48666a89-09de-47c8-80a2-79ee55475476
         unit_of_measurement: "W"
         device_class: power
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('pp', 0) | float(0) | round(0) }}"
 
       - name: "Xert HIE"
-        unique_id: xert_hie_webhook
+        unique_id: add1cf86-ecb6-4fbd-b441-6755307b2d0b
         unit_of_measurement: "kJ"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('hie', 0) | float(0) | round(2) }}"
 
       - name: "Xert TL Low"
-        unique_id: xert_tl_low_webhook
+        unique_id: 463485df-5f82-4d6a-92ac-59fdd74ebb08
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('low', 0) | float(0) | round(1) }}"
 
       - name: "Xert TL High"
-        unique_id: xert_tl_high_webhook
+        unique_id: 1d7ebc2e-efb0-48f9-9861-87eca0d69815
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('high', 0) | float(0) | round(1) }}"
 
       - name: "Xert TL Peak"
-        unique_id: xert_tl_peak_webhook
+        unique_id: 54fc20cd-0aa8-4971-8a2a-697fe0eaba5d
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('peak', 0) | float(0) | round(1) }}"
 
       - name: "Xert TL Total"
-        unique_id: xert_tl_total_webhook
+        unique_id: e60ef139-a512-488d-bb4f-cd159d92d929
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('total', 0) | float(0) | round(1) }}"
 
       - name: "Xert Target XSS Total"
-        unique_id: xert_target_xss_total_webhook
+        unique_id: 18279b2e-3f32-440c-a256-40c165bc44c5
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('total', 0) | float(0) | round(1) }}"
 
       - name: "Xert Target XSS Low"
-        unique_id: xert_target_xss_low_webhook
+        unique_id: 316eeaea-a959-422f-8097-fc04f033aa31
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('low', 0) | float(0) | round(1) }}"
 
       - name: "Xert Target XSS High"
-        unique_id: xert_target_xss_high_webhook
+        unique_id: a0865e1d-0999-463e-ac60-a2500849f84b
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('high', 0) | float(0) | round(1) }}"
 
       - name: "Xert Target XSS Peak"
-        unique_id: xert_target_xss_peak_webhook
+        unique_id: edd051f1-3bf0-44a5-a88e-650dd8a01143
         unit_of_measurement: "XSS"
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('peak', 0) | float(0) | round(1) }}"
@@ -175,7 +175,7 @@ template:
       acts: "{{ (root.get('activities') or []) | sort(attribute='ts', reverse=true) | list }}"
     sensor:
       - name: "Xert Activity 0"
-        unique_id: xert_activity_0_webhook
+        unique_id: 07266825-c04e-474b-aa0c-8703084f4daa
         availability: "{{ available }}"
         state: "{{ acts[0].ts | timestamp_local if acts | count > 0 and acts[0].ts else '' }}"
         attributes:
@@ -187,7 +187,7 @@ template:
           slot_index: 0
 
       - name: "Xert Activity 1"
-        unique_id: xert_activity_1_webhook
+        unique_id: c35887d4-60fd-4f02-ab17-b7d394da1823
         availability: "{{ available }}"
         state: "{{ acts[1].ts | timestamp_local if acts | count > 1 and acts[1].ts else '' }}"
         attributes:
@@ -199,7 +199,7 @@ template:
           slot_index: 1
 
       - name: "Xert Activity 2"
-        unique_id: xert_activity_2_webhook
+        unique_id: 1a8c30dd-9ba9-4a13-8416-25a8529be088
         availability: "{{ available }}"
         state: "{{ acts[2].ts | timestamp_local if acts | count > 2 and acts[2].ts else '' }}"
         attributes:
@@ -211,7 +211,7 @@ template:
           slot_index: 2
 
       - name: "Xert Activity 3"
-        unique_id: xert_activity_3_webhook
+        unique_id: bb237cad-0f03-410e-b981-3241116c27f5
         availability: "{{ available }}"
         state: "{{ acts[3].ts | timestamp_local if acts | count > 3 and acts[3].ts else '' }}"
         attributes:
@@ -223,7 +223,7 @@ template:
           slot_index: 3
 
       - name: "Xert Activity 4"
-        unique_id: xert_activity_4_webhook
+        unique_id: 9bfa9864-3bfc-4fc0-ba17-0d68520b8a49
         availability: "{{ available }}"
         state: "{{ acts[4].ts | timestamp_local if acts | count > 4 and acts[4].ts else '' }}"
         attributes:
