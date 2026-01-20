@@ -164,9 +164,8 @@ template:
         state_class: measurement
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('peak', 0) | float(0) | round(1) }}"
 
-  # Activity sensors (slots 0-4)
-  # Note: XSS per activity requires fetching activity details separately.
-  # The activity list only returns: path, name, start_date, duration, focus
+  # Activity sensors (slots 0-49)
+  # Includes full detail data with XSS from activity detail API
   - trigger:
       - platform: event
         event_type: xert_activity_list_update
@@ -191,6 +190,10 @@ template:
           name: "{{ acts[0].name if acts | count > 0 else none }}"
           duration_min: "{{ (acts[0].duration | float(0) / 60) | round(1) if acts | count > 0 else none }}"
           focus: "{{ acts[0].focus if acts | count > 0 else none }}"
+          xss: "{{ acts[0].xss | float(0) | round(1) if acts | count > 0 and acts[0].xss is defined else none }}"
+          xss_low: "{{ acts[0].xss_low | float(0) | round(1) if acts | count > 0 and acts[0].xss_low is defined else none }}"
+          xss_high: "{{ acts[0].xss_high | float(0) | round(1) if acts | count > 0 and acts[0].xss_high is defined else none }}"
+          xss_peak: "{{ acts[0].xss_peak | float(0) | round(1) if acts | count > 0 and acts[0].xss_peak is defined else none }}"
           slot_index: 0
 
       - name: "Xert Activity 1"
@@ -202,6 +205,10 @@ template:
           name: "{{ acts[1].name if acts | count > 1 else none }}"
           duration_min: "{{ (acts[1].duration | float(0) / 60) | round(1) if acts | count > 1 else none }}"
           focus: "{{ acts[1].focus if acts | count > 1 else none }}"
+          xss: "{{ acts[1].xss | float(0) | round(1) if acts | count > 1 and acts[1].xss is defined else none }}"
+          xss_low: "{{ acts[1].xss_low | float(0) | round(1) if acts | count > 1 and acts[1].xss_low is defined else none }}"
+          xss_high: "{{ acts[1].xss_high | float(0) | round(1) if acts | count > 1 and acts[1].xss_high is defined else none }}"
+          xss_peak: "{{ acts[1].xss_peak | float(0) | round(1) if acts | count > 1 and acts[1].xss_peak is defined else none }}"
           slot_index: 1
 
       - name: "Xert Activity 2"
@@ -213,6 +220,10 @@ template:
           name: "{{ acts[2].name if acts | count > 2 else none }}"
           duration_min: "{{ (acts[2].duration | float(0) / 60) | round(1) if acts | count > 2 else none }}"
           focus: "{{ acts[2].focus if acts | count > 2 else none }}"
+          xss: "{{ acts[2].xss | float(0) | round(1) if acts | count > 2 and acts[2].xss is defined else none }}"
+          xss_low: "{{ acts[2].xss_low | float(0) | round(1) if acts | count > 2 and acts[2].xss_low is defined else none }}"
+          xss_high: "{{ acts[2].xss_high | float(0) | round(1) if acts | count > 2 and acts[2].xss_high is defined else none }}"
+          xss_peak: "{{ acts[2].xss_peak | float(0) | round(1) if acts | count > 2 and acts[2].xss_peak is defined else none }}"
           slot_index: 2
 
       - name: "Xert Activity 3"
@@ -224,6 +235,10 @@ template:
           name: "{{ acts[3].name if acts | count > 3 else none }}"
           duration_min: "{{ (acts[3].duration | float(0) / 60) | round(1) if acts | count > 3 else none }}"
           focus: "{{ acts[3].focus if acts | count > 3 else none }}"
+          xss: "{{ acts[3].xss | float(0) | round(1) if acts | count > 3 and acts[3].xss is defined else none }}"
+          xss_low: "{{ acts[3].xss_low | float(0) | round(1) if acts | count > 3 and acts[3].xss_low is defined else none }}"
+          xss_high: "{{ acts[3].xss_high | float(0) | round(1) if acts | count > 3 and acts[3].xss_high is defined else none }}"
+          xss_peak: "{{ acts[3].xss_peak | float(0) | round(1) if acts | count > 3 and acts[3].xss_peak is defined else none }}"
           slot_index: 3
 
       - name: "Xert Activity 4"
@@ -235,4 +250,683 @@ template:
           name: "{{ acts[4].name if acts | count > 4 else none }}"
           duration_min: "{{ (acts[4].duration | float(0) / 60) | round(1) if acts | count > 4 else none }}"
           focus: "{{ acts[4].focus if acts | count > 4 else none }}"
+          xss: "{{ acts[4].xss | float(0) | round(1) if acts | count > 4 and acts[4].xss is defined else none }}"
+          xss_low: "{{ acts[4].xss_low | float(0) | round(1) if acts | count > 4 and acts[4].xss_low is defined else none }}"
+          xss_high: "{{ acts[4].xss_high | float(0) | round(1) if acts | count > 4 and acts[4].xss_high is defined else none }}"
+          xss_peak: "{{ acts[4].xss_peak | float(0) | round(1) if acts | count > 4 and acts[4].xss_peak is defined else none }}"
           slot_index: 4
+
+      - name: "Xert Activity 5"
+        unique_id: 4f8e3b2a-1c9d-4e7f-8a6b-5c3d2e1f0a9b
+        availability: "{{ available }}"
+        state: "{{ acts[5].start_date.date if acts | count > 5 else '' }}"
+        attributes:
+          path: "{{ acts[5].path if acts | count > 5 else none }}"
+          name: "{{ acts[5].name if acts | count > 5 else none }}"
+          duration_min: "{{ (acts[5].duration | float(0) / 60) | round(1) if acts | count > 5 else none }}"
+          focus: "{{ acts[5].focus if acts | count > 5 else none }}"
+          xss: "{{ acts[5].xss | float(0) | round(1) if acts | count > 5 and acts[5].xss is defined else none }}"
+          xss_low: "{{ acts[5].xss_low | float(0) | round(1) if acts | count > 5 and acts[5].xss_low is defined else none }}"
+          xss_high: "{{ acts[5].xss_high | float(0) | round(1) if acts | count > 5 and acts[5].xss_high is defined else none }}"
+          xss_peak: "{{ acts[5].xss_peak | float(0) | round(1) if acts | count > 5 and acts[5].xss_peak is defined else none }}"
+          slot_index: 5
+
+      - name: "Xert Activity 6"
+        unique_id: 5e9f4c3b-2d0e-5f8a-9b7c-6d4e3f2a1b0c
+        availability: "{{ available }}"
+        state: "{{ acts[6].start_date.date if acts | count > 6 else '' }}"
+        attributes:
+          path: "{{ acts[6].path if acts | count > 6 else none }}"
+          name: "{{ acts[6].name if acts | count > 6 else none }}"
+          duration_min: "{{ (acts[6].duration | float(0) / 60) | round(1) if acts | count > 6 else none }}"
+          focus: "{{ acts[6].focus if acts | count > 6 else none }}"
+          xss: "{{ acts[6].xss | float(0) | round(1) if acts | count > 6 and acts[6].xss is defined else none }}"
+          xss_low: "{{ acts[6].xss_low | float(0) | round(1) if acts | count > 6 and acts[6].xss_low is defined else none }}"
+          xss_high: "{{ acts[6].xss_high | float(0) | round(1) if acts | count > 6 and acts[6].xss_high is defined else none }}"
+          xss_peak: "{{ acts[6].xss_peak | float(0) | round(1) if acts | count > 6 and acts[6].xss_peak is defined else none }}"
+          slot_index: 6
+
+      - name: "Xert Activity 7"
+        unique_id: 6f0a5d4c-3e1f-6a9b-0c8d-7e5f4a3b2c1d
+        availability: "{{ available }}"
+        state: "{{ acts[7].start_date.date if acts | count > 7 else '' }}"
+        attributes:
+          path: "{{ acts[7].path if acts | count > 7 else none }}"
+          name: "{{ acts[7].name if acts | count > 7 else none }}"
+          duration_min: "{{ (acts[7].duration | float(0) / 60) | round(1) if acts | count > 7 else none }}"
+          focus: "{{ acts[7].focus if acts | count > 7 else none }}"
+          xss: "{{ acts[7].xss | float(0) | round(1) if acts | count > 7 and acts[7].xss is defined else none }}"
+          xss_low: "{{ acts[7].xss_low | float(0) | round(1) if acts | count > 7 and acts[7].xss_low is defined else none }}"
+          xss_high: "{{ acts[7].xss_high | float(0) | round(1) if acts | count > 7 and acts[7].xss_high is defined else none }}"
+          xss_peak: "{{ acts[7].xss_peak | float(0) | round(1) if acts | count > 7 and acts[7].xss_peak is defined else none }}"
+          slot_index: 7
+
+      - name: "Xert Activity 8"
+        unique_id: 7a1b6e5d-4f2a-7b0c-1d9e-8f6a5b4c3d2e
+        availability: "{{ available }}"
+        state: "{{ acts[8].start_date.date if acts | count > 8 else '' }}"
+        attributes:
+          path: "{{ acts[8].path if acts | count > 8 else none }}"
+          name: "{{ acts[8].name if acts | count > 8 else none }}"
+          duration_min: "{{ (acts[8].duration | float(0) / 60) | round(1) if acts | count > 8 else none }}"
+          focus: "{{ acts[8].focus if acts | count > 8 else none }}"
+          xss: "{{ acts[8].xss | float(0) | round(1) if acts | count > 8 and acts[8].xss is defined else none }}"
+          xss_low: "{{ acts[8].xss_low | float(0) | round(1) if acts | count > 8 and acts[8].xss_low is defined else none }}"
+          xss_high: "{{ acts[8].xss_high | float(0) | round(1) if acts | count > 8 and acts[8].xss_high is defined else none }}"
+          xss_peak: "{{ acts[8].xss_peak | float(0) | round(1) if acts | count > 8 and acts[8].xss_peak is defined else none }}"
+          slot_index: 8
+
+      - name: "Xert Activity 9"
+        unique_id: 8b2c7f6e-5a3b-8c1d-2e0f-9a7b6c5d4e3f
+        availability: "{{ available }}"
+        state: "{{ acts[9].start_date.date if acts | count > 9 else '' }}"
+        attributes:
+          path: "{{ acts[9].path if acts | count > 9 else none }}"
+          name: "{{ acts[9].name if acts | count > 9 else none }}"
+          duration_min: "{{ (acts[9].duration | float(0) / 60) | round(1) if acts | count > 9 else none }}"
+          focus: "{{ acts[9].focus if acts | count > 9 else none }}"
+          xss: "{{ acts[9].xss | float(0) | round(1) if acts | count > 9 and acts[9].xss is defined else none }}"
+          xss_low: "{{ acts[9].xss_low | float(0) | round(1) if acts | count > 9 and acts[9].xss_low is defined else none }}"
+          xss_high: "{{ acts[9].xss_high | float(0) | round(1) if acts | count > 9 and acts[9].xss_high is defined else none }}"
+          xss_peak: "{{ acts[9].xss_peak | float(0) | round(1) if acts | count > 9 and acts[9].xss_peak is defined else none }}"
+          slot_index: 9
+
+      - name: "Xert Activity 10"
+        unique_id: 9c3d8a7f-6b4c-9d2e-3f1a-0b8c7d6e5f4a
+        availability: "{{ available }}"
+        state: "{{ acts[10].start_date.date if acts | count > 10 else '' }}"
+        attributes:
+          path: "{{ acts[10].path if acts | count > 10 else none }}"
+          name: "{{ acts[10].name if acts | count > 10 else none }}"
+          duration_min: "{{ (acts[10].duration | float(0) / 60) | round(1) if acts | count > 10 else none }}"
+          focus: "{{ acts[10].focus if acts | count > 10 else none }}"
+          xss: "{{ acts[10].xss | float(0) | round(1) if acts | count > 10 and acts[10].xss is defined else none }}"
+          xss_low: "{{ acts[10].xss_low | float(0) | round(1) if acts | count > 10 and acts[10].xss_low is defined else none }}"
+          xss_high: "{{ acts[10].xss_high | float(0) | round(1) if acts | count > 10 and acts[10].xss_high is defined else none }}"
+          xss_peak: "{{ acts[10].xss_peak | float(0) | round(1) if acts | count > 10 and acts[10].xss_peak is defined else none }}"
+          slot_index: 10
+
+      - name: "Xert Activity 11"
+        unique_id: 0d4e9b8a-7c5d-0e3f-4a2b-1c9d8e7f6a5b
+        availability: "{{ available }}"
+        state: "{{ acts[11].start_date.date if acts | count > 11 else '' }}"
+        attributes:
+          path: "{{ acts[11].path if acts | count > 11 else none }}"
+          name: "{{ acts[11].name if acts | count > 11 else none }}"
+          duration_min: "{{ (acts[11].duration | float(0) / 60) | round(1) if acts | count > 11 else none }}"
+          focus: "{{ acts[11].focus if acts | count > 11 else none }}"
+          xss: "{{ acts[11].xss | float(0) | round(1) if acts | count > 11 and acts[11].xss is defined else none }}"
+          xss_low: "{{ acts[11].xss_low | float(0) | round(1) if acts | count > 11 and acts[11].xss_low is defined else none }}"
+          xss_high: "{{ acts[11].xss_high | float(0) | round(1) if acts | count > 11 and acts[11].xss_high is defined else none }}"
+          xss_peak: "{{ acts[11].xss_peak | float(0) | round(1) if acts | count > 11 and acts[11].xss_peak is defined else none }}"
+          slot_index: 11
+
+      - name: "Xert Activity 12"
+        unique_id: 1e5f0c9b-8d6e-1f4a-5b3c-2d0e9f8a7b6c
+        availability: "{{ available }}"
+        state: "{{ acts[12].start_date.date if acts | count > 12 else '' }}"
+        attributes:
+          path: "{{ acts[12].path if acts | count > 12 else none }}"
+          name: "{{ acts[12].name if acts | count > 12 else none }}"
+          duration_min: "{{ (acts[12].duration | float(0) / 60) | round(1) if acts | count > 12 else none }}"
+          focus: "{{ acts[12].focus if acts | count > 12 else none }}"
+          xss: "{{ acts[12].xss | float(0) | round(1) if acts | count > 12 and acts[12].xss is defined else none }}"
+          xss_low: "{{ acts[12].xss_low | float(0) | round(1) if acts | count > 12 and acts[12].xss_low is defined else none }}"
+          xss_high: "{{ acts[12].xss_high | float(0) | round(1) if acts | count > 12 and acts[12].xss_high is defined else none }}"
+          xss_peak: "{{ acts[12].xss_peak | float(0) | round(1) if acts | count > 12 and acts[12].xss_peak is defined else none }}"
+          slot_index: 12
+
+      - name: "Xert Activity 13"
+        unique_id: 2f6a1d0c-9e7f-2a5b-6c4d-3e1f0a9b8c7d
+        availability: "{{ available }}"
+        state: "{{ acts[13].start_date.date if acts | count > 13 else '' }}"
+        attributes:
+          path: "{{ acts[13].path if acts | count > 13 else none }}"
+          name: "{{ acts[13].name if acts | count > 13 else none }}"
+          duration_min: "{{ (acts[13].duration | float(0) / 60) | round(1) if acts | count > 13 else none }}"
+          focus: "{{ acts[13].focus if acts | count > 13 else none }}"
+          xss: "{{ acts[13].xss | float(0) | round(1) if acts | count > 13 and acts[13].xss is defined else none }}"
+          xss_low: "{{ acts[13].xss_low | float(0) | round(1) if acts | count > 13 and acts[13].xss_low is defined else none }}"
+          xss_high: "{{ acts[13].xss_high | float(0) | round(1) if acts | count > 13 and acts[13].xss_high is defined else none }}"
+          xss_peak: "{{ acts[13].xss_peak | float(0) | round(1) if acts | count > 13 and acts[13].xss_peak is defined else none }}"
+          slot_index: 13
+
+      - name: "Xert Activity 14"
+        unique_id: 3a7b2e1d-0f8a-3b6c-7d5e-4f2a1b0c9d8e
+        availability: "{{ available }}"
+        state: "{{ acts[14].start_date.date if acts | count > 14 else '' }}"
+        attributes:
+          path: "{{ acts[14].path if acts | count > 14 else none }}"
+          name: "{{ acts[14].name if acts | count > 14 else none }}"
+          duration_min: "{{ (acts[14].duration | float(0) / 60) | round(1) if acts | count > 14 else none }}"
+          focus: "{{ acts[14].focus if acts | count > 14 else none }}"
+          xss: "{{ acts[14].xss | float(0) | round(1) if acts | count > 14 and acts[14].xss is defined else none }}"
+          xss_low: "{{ acts[14].xss_low | float(0) | round(1) if acts | count > 14 and acts[14].xss_low is defined else none }}"
+          xss_high: "{{ acts[14].xss_high | float(0) | round(1) if acts | count > 14 and acts[14].xss_high is defined else none }}"
+          xss_peak: "{{ acts[14].xss_peak | float(0) | round(1) if acts | count > 14 and acts[14].xss_peak is defined else none }}"
+          slot_index: 14
+
+      - name: "Xert Activity 15"
+        unique_id: 4b8c3f2e-1a9b-4c7d-8e6f-5a3b2c1d0e9f
+        availability: "{{ available }}"
+        state: "{{ acts[15].start_date.date if acts | count > 15 else '' }}"
+        attributes:
+          path: "{{ acts[15].path if acts | count > 15 else none }}"
+          name: "{{ acts[15].name if acts | count > 15 else none }}"
+          duration_min: "{{ (acts[15].duration | float(0) / 60) | round(1) if acts | count > 15 else none }}"
+          focus: "{{ acts[15].focus if acts | count > 15 else none }}"
+          xss: "{{ acts[15].xss | float(0) | round(1) if acts | count > 15 and acts[15].xss is defined else none }}"
+          xss_low: "{{ acts[15].xss_low | float(0) | round(1) if acts | count > 15 and acts[15].xss_low is defined else none }}"
+          xss_high: "{{ acts[15].xss_high | float(0) | round(1) if acts | count > 15 and acts[15].xss_high is defined else none }}"
+          xss_peak: "{{ acts[15].xss_peak | float(0) | round(1) if acts | count > 15 and acts[15].xss_peak is defined else none }}"
+          slot_index: 15
+
+      - name: "Xert Activity 16"
+        unique_id: 5c9d4a3f-2b0c-5d8e-9f7a-6b4c3d2e1f0a
+        availability: "{{ available }}"
+        state: "{{ acts[16].start_date.date if acts | count > 16 else '' }}"
+        attributes:
+          path: "{{ acts[16].path if acts | count > 16 else none }}"
+          name: "{{ acts[16].name if acts | count > 16 else none }}"
+          duration_min: "{{ (acts[16].duration | float(0) / 60) | round(1) if acts | count > 16 else none }}"
+          focus: "{{ acts[16].focus if acts | count > 16 else none }}"
+          xss: "{{ acts[16].xss | float(0) | round(1) if acts | count > 16 and acts[16].xss is defined else none }}"
+          xss_low: "{{ acts[16].xss_low | float(0) | round(1) if acts | count > 16 and acts[16].xss_low is defined else none }}"
+          xss_high: "{{ acts[16].xss_high | float(0) | round(1) if acts | count > 16 and acts[16].xss_high is defined else none }}"
+          xss_peak: "{{ acts[16].xss_peak | float(0) | round(1) if acts | count > 16 and acts[16].xss_peak is defined else none }}"
+          slot_index: 16
+
+      - name: "Xert Activity 17"
+        unique_id: 6d0e5b4a-3c1d-6e9f-0a8b-7c5d4e3f2a1b
+        availability: "{{ available }}"
+        state: "{{ acts[17].start_date.date if acts | count > 17 else '' }}"
+        attributes:
+          path: "{{ acts[17].path if acts | count > 17 else none }}"
+          name: "{{ acts[17].name if acts | count > 17 else none }}"
+          duration_min: "{{ (acts[17].duration | float(0) / 60) | round(1) if acts | count > 17 else none }}"
+          focus: "{{ acts[17].focus if acts | count > 17 else none }}"
+          xss: "{{ acts[17].xss | float(0) | round(1) if acts | count > 17 and acts[17].xss is defined else none }}"
+          xss_low: "{{ acts[17].xss_low | float(0) | round(1) if acts | count > 17 and acts[17].xss_low is defined else none }}"
+          xss_high: "{{ acts[17].xss_high | float(0) | round(1) if acts | count > 17 and acts[17].xss_high is defined else none }}"
+          xss_peak: "{{ acts[17].xss_peak | float(0) | round(1) if acts | count > 17 and acts[17].xss_peak is defined else none }}"
+          slot_index: 17
+
+      - name: "Xert Activity 18"
+        unique_id: 7e1f6c5b-4d2e-7f0a-1b9c-8d6e5f4a3b2c
+        availability: "{{ available }}"
+        state: "{{ acts[18].start_date.date if acts | count > 18 else '' }}"
+        attributes:
+          path: "{{ acts[18].path if acts | count > 18 else none }}"
+          name: "{{ acts[18].name if acts | count > 18 else none }}"
+          duration_min: "{{ (acts[18].duration | float(0) / 60) | round(1) if acts | count > 18 else none }}"
+          focus: "{{ acts[18].focus if acts | count > 18 else none }}"
+          xss: "{{ acts[18].xss | float(0) | round(1) if acts | count > 18 and acts[18].xss is defined else none }}"
+          xss_low: "{{ acts[18].xss_low | float(0) | round(1) if acts | count > 18 and acts[18].xss_low is defined else none }}"
+          xss_high: "{{ acts[18].xss_high | float(0) | round(1) if acts | count > 18 and acts[18].xss_high is defined else none }}"
+          xss_peak: "{{ acts[18].xss_peak | float(0) | round(1) if acts | count > 18 and acts[18].xss_peak is defined else none }}"
+          slot_index: 18
+
+      - name: "Xert Activity 19"
+        unique_id: 8f2a7d6c-5e3f-8a1b-2c0d-9e7f6a5b4c3d
+        availability: "{{ available }}"
+        state: "{{ acts[19].start_date.date if acts | count > 19 else '' }}"
+        attributes:
+          path: "{{ acts[19].path if acts | count > 19 else none }}"
+          name: "{{ acts[19].name if acts | count > 19 else none }}"
+          duration_min: "{{ (acts[19].duration | float(0) / 60) | round(1) if acts | count > 19 else none }}"
+          focus: "{{ acts[19].focus if acts | count > 19 else none }}"
+          xss: "{{ acts[19].xss | float(0) | round(1) if acts | count > 19 and acts[19].xss is defined else none }}"
+          xss_low: "{{ acts[19].xss_low | float(0) | round(1) if acts | count > 19 and acts[19].xss_low is defined else none }}"
+          xss_high: "{{ acts[19].xss_high | float(0) | round(1) if acts | count > 19 and acts[19].xss_high is defined else none }}"
+          xss_peak: "{{ acts[19].xss_peak | float(0) | round(1) if acts | count > 19 and acts[19].xss_peak is defined else none }}"
+          slot_index: 19
+
+      - name: "Xert Activity 20"
+        unique_id: 9a3b8e7d-6f4a-9b2c-3d1e-0f8a7b6c5d4e
+        availability: "{{ available }}"
+        state: "{{ acts[20].start_date.date if acts | count > 20 else '' }}"
+        attributes:
+          path: "{{ acts[20].path if acts | count > 20 else none }}"
+          name: "{{ acts[20].name if acts | count > 20 else none }}"
+          duration_min: "{{ (acts[20].duration | float(0) / 60) | round(1) if acts | count > 20 else none }}"
+          focus: "{{ acts[20].focus if acts | count > 20 else none }}"
+          xss: "{{ acts[20].xss | float(0) | round(1) if acts | count > 20 and acts[20].xss is defined else none }}"
+          xss_low: "{{ acts[20].xss_low | float(0) | round(1) if acts | count > 20 and acts[20].xss_low is defined else none }}"
+          xss_high: "{{ acts[20].xss_high | float(0) | round(1) if acts | count > 20 and acts[20].xss_high is defined else none }}"
+          xss_peak: "{{ acts[20].xss_peak | float(0) | round(1) if acts | count > 20 and acts[20].xss_peak is defined else none }}"
+          slot_index: 20
+
+      - name: "Xert Activity 21"
+        unique_id: 0b4c9f8e-7a5b-0c3d-4e2f-1a9b8c7d6e5f
+        availability: "{{ available }}"
+        state: "{{ acts[21].start_date.date if acts | count > 21 else '' }}"
+        attributes:
+          path: "{{ acts[21].path if acts | count > 21 else none }}"
+          name: "{{ acts[21].name if acts | count > 21 else none }}"
+          duration_min: "{{ (acts[21].duration | float(0) / 60) | round(1) if acts | count > 21 else none }}"
+          focus: "{{ acts[21].focus if acts | count > 21 else none }}"
+          xss: "{{ acts[21].xss | float(0) | round(1) if acts | count > 21 and acts[21].xss is defined else none }}"
+          xss_low: "{{ acts[21].xss_low | float(0) | round(1) if acts | count > 21 and acts[21].xss_low is defined else none }}"
+          xss_high: "{{ acts[21].xss_high | float(0) | round(1) if acts | count > 21 and acts[21].xss_high is defined else none }}"
+          xss_peak: "{{ acts[21].xss_peak | float(0) | round(1) if acts | count > 21 and acts[21].xss_peak is defined else none }}"
+          slot_index: 21
+
+      - name: "Xert Activity 22"
+        unique_id: 1c5d0a9f-8b6c-1d4e-5f3a-2b0c9d8e7f6a
+        availability: "{{ available }}"
+        state: "{{ acts[22].start_date.date if acts | count > 22 else '' }}"
+        attributes:
+          path: "{{ acts[22].path if acts | count > 22 else none }}"
+          name: "{{ acts[22].name if acts | count > 22 else none }}"
+          duration_min: "{{ (acts[22].duration | float(0) / 60) | round(1) if acts | count > 22 else none }}"
+          focus: "{{ acts[22].focus if acts | count > 22 else none }}"
+          xss: "{{ acts[22].xss | float(0) | round(1) if acts | count > 22 and acts[22].xss is defined else none }}"
+          xss_low: "{{ acts[22].xss_low | float(0) | round(1) if acts | count > 22 and acts[22].xss_low is defined else none }}"
+          xss_high: "{{ acts[22].xss_high | float(0) | round(1) if acts | count > 22 and acts[22].xss_high is defined else none }}"
+          xss_peak: "{{ acts[22].xss_peak | float(0) | round(1) if acts | count > 22 and acts[22].xss_peak is defined else none }}"
+          slot_index: 22
+
+      - name: "Xert Activity 23"
+        unique_id: 2d6e1b0a-9c7d-2e5f-6a4b-3c1d0e9f8a7b
+        availability: "{{ available }}"
+        state: "{{ acts[23].start_date.date if acts | count > 23 else '' }}"
+        attributes:
+          path: "{{ acts[23].path if acts | count > 23 else none }}"
+          name: "{{ acts[23].name if acts | count > 23 else none }}"
+          duration_min: "{{ (acts[23].duration | float(0) / 60) | round(1) if acts | count > 23 else none }}"
+          focus: "{{ acts[23].focus if acts | count > 23 else none }}"
+          xss: "{{ acts[23].xss | float(0) | round(1) if acts | count > 23 and acts[23].xss is defined else none }}"
+          xss_low: "{{ acts[23].xss_low | float(0) | round(1) if acts | count > 23 and acts[23].xss_low is defined else none }}"
+          xss_high: "{{ acts[23].xss_high | float(0) | round(1) if acts | count > 23 and acts[23].xss_high is defined else none }}"
+          xss_peak: "{{ acts[23].xss_peak | float(0) | round(1) if acts | count > 23 and acts[23].xss_peak is defined else none }}"
+          slot_index: 23
+
+      - name: "Xert Activity 24"
+        unique_id: 3e7f2c1b-0d8e-3f6a-7b5c-4d2e1f0a9b8c
+        availability: "{{ available }}"
+        state: "{{ acts[24].start_date.date if acts | count > 24 else '' }}"
+        attributes:
+          path: "{{ acts[24].path if acts | count > 24 else none }}"
+          name: "{{ acts[24].name if acts | count > 24 else none }}"
+          duration_min: "{{ (acts[24].duration | float(0) / 60) | round(1) if acts | count > 24 else none }}"
+          focus: "{{ acts[24].focus if acts | count > 24 else none }}"
+          xss: "{{ acts[24].xss | float(0) | round(1) if acts | count > 24 and acts[24].xss is defined else none }}"
+          xss_low: "{{ acts[24].xss_low | float(0) | round(1) if acts | count > 24 and acts[24].xss_low is defined else none }}"
+          xss_high: "{{ acts[24].xss_high | float(0) | round(1) if acts | count > 24 and acts[24].xss_high is defined else none }}"
+          xss_peak: "{{ acts[24].xss_peak | float(0) | round(1) if acts | count > 24 and acts[24].xss_peak is defined else none }}"
+          slot_index: 24
+
+      - name: "Xert Activity 25"
+        unique_id: 4f8a3d2c-1e9f-4a7b-8c6d-5e3f2a1b0c9d
+        availability: "{{ available }}"
+        state: "{{ acts[25].start_date.date if acts | count > 25 else '' }}"
+        attributes:
+          path: "{{ acts[25].path if acts | count > 25 else none }}"
+          name: "{{ acts[25].name if acts | count > 25 else none }}"
+          duration_min: "{{ (acts[25].duration | float(0) / 60) | round(1) if acts | count > 25 else none }}"
+          focus: "{{ acts[25].focus if acts | count > 25 else none }}"
+          xss: "{{ acts[25].xss | float(0) | round(1) if acts | count > 25 and acts[25].xss is defined else none }}"
+          xss_low: "{{ acts[25].xss_low | float(0) | round(1) if acts | count > 25 and acts[25].xss_low is defined else none }}"
+          xss_high: "{{ acts[25].xss_high | float(0) | round(1) if acts | count > 25 and acts[25].xss_high is defined else none }}"
+          xss_peak: "{{ acts[25].xss_peak | float(0) | round(1) if acts | count > 25 and acts[25].xss_peak is defined else none }}"
+          slot_index: 25
+
+      - name: "Xert Activity 26"
+        unique_id: 5a9b4e3d-2f0a-5b8c-9d7e-6f4a3b2c1d0e
+        availability: "{{ available }}"
+        state: "{{ acts[26].start_date.date if acts | count > 26 else '' }}"
+        attributes:
+          path: "{{ acts[26].path if acts | count > 26 else none }}"
+          name: "{{ acts[26].name if acts | count > 26 else none }}"
+          duration_min: "{{ (acts[26].duration | float(0) / 60) | round(1) if acts | count > 26 else none }}"
+          focus: "{{ acts[26].focus if acts | count > 26 else none }}"
+          xss: "{{ acts[26].xss | float(0) | round(1) if acts | count > 26 and acts[26].xss is defined else none }}"
+          xss_low: "{{ acts[26].xss_low | float(0) | round(1) if acts | count > 26 and acts[26].xss_low is defined else none }}"
+          xss_high: "{{ acts[26].xss_high | float(0) | round(1) if acts | count > 26 and acts[26].xss_high is defined else none }}"
+          xss_peak: "{{ acts[26].xss_peak | float(0) | round(1) if acts | count > 26 and acts[26].xss_peak is defined else none }}"
+          slot_index: 26
+
+      - name: "Xert Activity 27"
+        unique_id: 6b0c5f4e-3a1b-6c9d-0e8f-7a5b4c3d2e1f
+        availability: "{{ available }}"
+        state: "{{ acts[27].start_date.date if acts | count > 27 else '' }}"
+        attributes:
+          path: "{{ acts[27].path if acts | count > 27 else none }}"
+          name: "{{ acts[27].name if acts | count > 27 else none }}"
+          duration_min: "{{ (acts[27].duration | float(0) / 60) | round(1) if acts | count > 27 else none }}"
+          focus: "{{ acts[27].focus if acts | count > 27 else none }}"
+          xss: "{{ acts[27].xss | float(0) | round(1) if acts | count > 27 and acts[27].xss is defined else none }}"
+          xss_low: "{{ acts[27].xss_low | float(0) | round(1) if acts | count > 27 and acts[27].xss_low is defined else none }}"
+          xss_high: "{{ acts[27].xss_high | float(0) | round(1) if acts | count > 27 and acts[27].xss_high is defined else none }}"
+          xss_peak: "{{ acts[27].xss_peak | float(0) | round(1) if acts | count > 27 and acts[27].xss_peak is defined else none }}"
+          slot_index: 27
+
+      - name: "Xert Activity 28"
+        unique_id: 7c1d6a5f-4b2c-7d0e-1f9a-8b6c5d4e3f2a
+        availability: "{{ available }}"
+        state: "{{ acts[28].start_date.date if acts | count > 28 else '' }}"
+        attributes:
+          path: "{{ acts[28].path if acts | count > 28 else none }}"
+          name: "{{ acts[28].name if acts | count > 28 else none }}"
+          duration_min: "{{ (acts[28].duration | float(0) / 60) | round(1) if acts | count > 28 else none }}"
+          focus: "{{ acts[28].focus if acts | count > 28 else none }}"
+          xss: "{{ acts[28].xss | float(0) | round(1) if acts | count > 28 and acts[28].xss is defined else none }}"
+          xss_low: "{{ acts[28].xss_low | float(0) | round(1) if acts | count > 28 and acts[28].xss_low is defined else none }}"
+          xss_high: "{{ acts[28].xss_high | float(0) | round(1) if acts | count > 28 and acts[28].xss_high is defined else none }}"
+          xss_peak: "{{ acts[28].xss_peak | float(0) | round(1) if acts | count > 28 and acts[28].xss_peak is defined else none }}"
+          slot_index: 28
+
+      - name: "Xert Activity 29"
+        unique_id: 8d2e7b6a-5c3d-8e1f-2a0b-9c7d6e5f4a3b
+        availability: "{{ available }}"
+        state: "{{ acts[29].start_date.date if acts | count > 29 else '' }}"
+        attributes:
+          path: "{{ acts[29].path if acts | count > 29 else none }}"
+          name: "{{ acts[29].name if acts | count > 29 else none }}"
+          duration_min: "{{ (acts[29].duration | float(0) / 60) | round(1) if acts | count > 29 else none }}"
+          focus: "{{ acts[29].focus if acts | count > 29 else none }}"
+          xss: "{{ acts[29].xss | float(0) | round(1) if acts | count > 29 and acts[29].xss is defined else none }}"
+          xss_low: "{{ acts[29].xss_low | float(0) | round(1) if acts | count > 29 and acts[29].xss_low is defined else none }}"
+          xss_high: "{{ acts[29].xss_high | float(0) | round(1) if acts | count > 29 and acts[29].xss_high is defined else none }}"
+          xss_peak: "{{ acts[29].xss_peak | float(0) | round(1) if acts | count > 29 and acts[29].xss_peak is defined else none }}"
+          slot_index: 29
+
+      - name: "Xert Activity 30"
+        unique_id: 9e3f8c7b-6d4e-9f2a-3b1c-0d8e7f6a5b4c
+        availability: "{{ available }}"
+        state: "{{ acts[30].start_date.date if acts | count > 30 else '' }}"
+        attributes:
+          path: "{{ acts[30].path if acts | count > 30 else none }}"
+          name: "{{ acts[30].name if acts | count > 30 else none }}"
+          duration_min: "{{ (acts[30].duration | float(0) / 60) | round(1) if acts | count > 30 else none }}"
+          focus: "{{ acts[30].focus if acts | count > 30 else none }}"
+          xss: "{{ acts[30].xss | float(0) | round(1) if acts | count > 30 and acts[30].xss is defined else none }}"
+          xss_low: "{{ acts[30].xss_low | float(0) | round(1) if acts | count > 30 and acts[30].xss_low is defined else none }}"
+          xss_high: "{{ acts[30].xss_high | float(0) | round(1) if acts | count > 30 and acts[30].xss_high is defined else none }}"
+          xss_peak: "{{ acts[30].xss_peak | float(0) | round(1) if acts | count > 30 and acts[30].xss_peak is defined else none }}"
+          slot_index: 30
+
+      - name: "Xert Activity 31"
+        unique_id: 0f4a9d8c-7e5f-0a3b-4c2d-1e9f8a7b6c5d
+        availability: "{{ available }}"
+        state: "{{ acts[31].start_date.date if acts | count > 31 else '' }}"
+        attributes:
+          path: "{{ acts[31].path if acts | count > 31 else none }}"
+          name: "{{ acts[31].name if acts | count > 31 else none }}"
+          duration_min: "{{ (acts[31].duration | float(0) / 60) | round(1) if acts | count > 31 else none }}"
+          focus: "{{ acts[31].focus if acts | count > 31 else none }}"
+          xss: "{{ acts[31].xss | float(0) | round(1) if acts | count > 31 and acts[31].xss is defined else none }}"
+          xss_low: "{{ acts[31].xss_low | float(0) | round(1) if acts | count > 31 and acts[31].xss_low is defined else none }}"
+          xss_high: "{{ acts[31].xss_high | float(0) | round(1) if acts | count > 31 and acts[31].xss_high is defined else none }}"
+          xss_peak: "{{ acts[31].xss_peak | float(0) | round(1) if acts | count > 31 and acts[31].xss_peak is defined else none }}"
+          slot_index: 31
+
+      - name: "Xert Activity 32"
+        unique_id: 1a5b0e9d-8f6a-1b4c-5d3e-2f0a9b8c7d6e
+        availability: "{{ available }}"
+        state: "{{ acts[32].start_date.date if acts | count > 32 else '' }}"
+        attributes:
+          path: "{{ acts[32].path if acts | count > 32 else none }}"
+          name: "{{ acts[32].name if acts | count > 32 else none }}"
+          duration_min: "{{ (acts[32].duration | float(0) / 60) | round(1) if acts | count > 32 else none }}"
+          focus: "{{ acts[32].focus if acts | count > 32 else none }}"
+          xss: "{{ acts[32].xss | float(0) | round(1) if acts | count > 32 and acts[32].xss is defined else none }}"
+          xss_low: "{{ acts[32].xss_low | float(0) | round(1) if acts | count > 32 and acts[32].xss_low is defined else none }}"
+          xss_high: "{{ acts[32].xss_high | float(0) | round(1) if acts | count > 32 and acts[32].xss_high is defined else none }}"
+          xss_peak: "{{ acts[32].xss_peak | float(0) | round(1) if acts | count > 32 and acts[32].xss_peak is defined else none }}"
+          slot_index: 32
+
+      - name: "Xert Activity 33"
+        unique_id: 2b6c1f0e-9a7b-2c5d-6e4f-3a1b0c9d8e7f
+        availability: "{{ available }}"
+        state: "{{ acts[33].start_date.date if acts | count > 33 else '' }}"
+        attributes:
+          path: "{{ acts[33].path if acts | count > 33 else none }}"
+          name: "{{ acts[33].name if acts | count > 33 else none }}"
+          duration_min: "{{ (acts[33].duration | float(0) / 60) | round(1) if acts | count > 33 else none }}"
+          focus: "{{ acts[33].focus if acts | count > 33 else none }}"
+          xss: "{{ acts[33].xss | float(0) | round(1) if acts | count > 33 and acts[33].xss is defined else none }}"
+          xss_low: "{{ acts[33].xss_low | float(0) | round(1) if acts | count > 33 and acts[33].xss_low is defined else none }}"
+          xss_high: "{{ acts[33].xss_high | float(0) | round(1) if acts | count > 33 and acts[33].xss_high is defined else none }}"
+          xss_peak: "{{ acts[33].xss_peak | float(0) | round(1) if acts | count > 33 and acts[33].xss_peak is defined else none }}"
+          slot_index: 33
+
+      - name: "Xert Activity 34"
+        unique_id: 3c7d2a1f-0b8c-3d6e-7f5a-4b2c1d0e9f8a
+        availability: "{{ available }}"
+        state: "{{ acts[34].start_date.date if acts | count > 34 else '' }}"
+        attributes:
+          path: "{{ acts[34].path if acts | count > 34 else none }}"
+          name: "{{ acts[34].name if acts | count > 34 else none }}"
+          duration_min: "{{ (acts[34].duration | float(0) / 60) | round(1) if acts | count > 34 else none }}"
+          focus: "{{ acts[34].focus if acts | count > 34 else none }}"
+          xss: "{{ acts[34].xss | float(0) | round(1) if acts | count > 34 and acts[34].xss is defined else none }}"
+          xss_low: "{{ acts[34].xss_low | float(0) | round(1) if acts | count > 34 and acts[34].xss_low is defined else none }}"
+          xss_high: "{{ acts[34].xss_high | float(0) | round(1) if acts | count > 34 and acts[34].xss_high is defined else none }}"
+          xss_peak: "{{ acts[34].xss_peak | float(0) | round(1) if acts | count > 34 and acts[34].xss_peak is defined else none }}"
+          slot_index: 34
+
+      - name: "Xert Activity 35"
+        unique_id: 4d8e3b2a-1c9d-4e7f-8a6b-5c3d2e1f0a9b
+        availability: "{{ available }}"
+        state: "{{ acts[35].start_date.date if acts | count > 35 else '' }}"
+        attributes:
+          path: "{{ acts[35].path if acts | count > 35 else none }}"
+          name: "{{ acts[35].name if acts | count > 35 else none }}"
+          duration_min: "{{ (acts[35].duration | float(0) / 60) | round(1) if acts | count > 35 else none }}"
+          focus: "{{ acts[35].focus if acts | count > 35 else none }}"
+          xss: "{{ acts[35].xss | float(0) | round(1) if acts | count > 35 and acts[35].xss is defined else none }}"
+          xss_low: "{{ acts[35].xss_low | float(0) | round(1) if acts | count > 35 and acts[35].xss_low is defined else none }}"
+          xss_high: "{{ acts[35].xss_high | float(0) | round(1) if acts | count > 35 and acts[35].xss_high is defined else none }}"
+          xss_peak: "{{ acts[35].xss_peak | float(0) | round(1) if acts | count > 35 and acts[35].xss_peak is defined else none }}"
+          slot_index: 35
+
+      - name: "Xert Activity 36"
+        unique_id: 5e9f4c3b-2d0e-5f8a-9b7c-6d4e3f2a1b0c
+        availability: "{{ available }}"
+        state: "{{ acts[36].start_date.date if acts | count > 36 else '' }}"
+        attributes:
+          path: "{{ acts[36].path if acts | count > 36 else none }}"
+          name: "{{ acts[36].name if acts | count > 36 else none }}"
+          duration_min: "{{ (acts[36].duration | float(0) / 60) | round(1) if acts | count > 36 else none }}"
+          focus: "{{ acts[36].focus if acts | count > 36 else none }}"
+          xss: "{{ acts[36].xss | float(0) | round(1) if acts | count > 36 and acts[36].xss is defined else none }}"
+          xss_low: "{{ acts[36].xss_low | float(0) | round(1) if acts | count > 36 and acts[36].xss_low is defined else none }}"
+          xss_high: "{{ acts[36].xss_high | float(0) | round(1) if acts | count > 36 and acts[36].xss_high is defined else none }}"
+          xss_peak: "{{ acts[36].xss_peak | float(0) | round(1) if acts | count > 36 and acts[36].xss_peak is defined else none }}"
+          slot_index: 36
+
+      - name: "Xert Activity 37"
+        unique_id: 6f0a5d4c-3e1f-6a9b-0c8d-7e5f4a3b2c1d
+        availability: "{{ available }}"
+        state: "{{ acts[37].start_date.date if acts | count > 37 else '' }}"
+        attributes:
+          path: "{{ acts[37].path if acts | count > 37 else none }}"
+          name: "{{ acts[37].name if acts | count > 37 else none }}"
+          duration_min: "{{ (acts[37].duration | float(0) / 60) | round(1) if acts | count > 37 else none }}"
+          focus: "{{ acts[37].focus if acts | count > 37 else none }}"
+          xss: "{{ acts[37].xss | float(0) | round(1) if acts | count > 37 and acts[37].xss is defined else none }}"
+          xss_low: "{{ acts[37].xss_low | float(0) | round(1) if acts | count > 37 and acts[37].xss_low is defined else none }}"
+          xss_high: "{{ acts[37].xss_high | float(0) | round(1) if acts | count > 37 and acts[37].xss_high is defined else none }}"
+          xss_peak: "{{ acts[37].xss_peak | float(0) | round(1) if acts | count > 37 and acts[37].xss_peak is defined else none }}"
+          slot_index: 37
+
+      - name: "Xert Activity 38"
+        unique_id: 7a1b6e5d-4f2a-7b0c-1d9e-8f6a5b4c3d2e
+        availability: "{{ available }}"
+        state: "{{ acts[38].start_date.date if acts | count > 38 else '' }}"
+        attributes:
+          path: "{{ acts[38].path if acts | count > 38 else none }}"
+          name: "{{ acts[38].name if acts | count > 38 else none }}"
+          duration_min: "{{ (acts[38].duration | float(0) / 60) | round(1) if acts | count > 38 else none }}"
+          focus: "{{ acts[38].focus if acts | count > 38 else none }}"
+          xss: "{{ acts[38].xss | float(0) | round(1) if acts | count > 38 and acts[38].xss is defined else none }}"
+          xss_low: "{{ acts[38].xss_low | float(0) | round(1) if acts | count > 38 and acts[38].xss_low is defined else none }}"
+          xss_high: "{{ acts[38].xss_high | float(0) | round(1) if acts | count > 38 and acts[38].xss_high is defined else none }}"
+          xss_peak: "{{ acts[38].xss_peak | float(0) | round(1) if acts | count > 38 and acts[38].xss_peak is defined else none }}"
+          slot_index: 38
+
+      - name: "Xert Activity 39"
+        unique_id: 8b2c7f6e-5a3b-8c1d-2e0f-9a7b6c5d4e3f
+        availability: "{{ available }}"
+        state: "{{ acts[39].start_date.date if acts | count > 39 else '' }}"
+        attributes:
+          path: "{{ acts[39].path if acts | count > 39 else none }}"
+          name: "{{ acts[39].name if acts | count > 39 else none }}"
+          duration_min: "{{ (acts[39].duration | float(0) / 60) | round(1) if acts | count > 39 else none }}"
+          focus: "{{ acts[39].focus if acts | count > 39 else none }}"
+          xss: "{{ acts[39].xss | float(0) | round(1) if acts | count > 39 and acts[39].xss is defined else none }}"
+          xss_low: "{{ acts[39].xss_low | float(0) | round(1) if acts | count > 39 and acts[39].xss_low is defined else none }}"
+          xss_high: "{{ acts[39].xss_high | float(0) | round(1) if acts | count > 39 and acts[39].xss_high is defined else none }}"
+          xss_peak: "{{ acts[39].xss_peak | float(0) | round(1) if acts | count > 39 and acts[39].xss_peak is defined else none }}"
+          slot_index: 39
+
+      - name: "Xert Activity 40"
+        unique_id: 9c3d8a7f-6b4c-9d2e-3f1a-0b8c7d6e5f4a
+        availability: "{{ available }}"
+        state: "{{ acts[40].start_date.date if acts | count > 40 else '' }}"
+        attributes:
+          path: "{{ acts[40].path if acts | count > 40 else none }}"
+          name: "{{ acts[40].name if acts | count > 40 else none }}"
+          duration_min: "{{ (acts[40].duration | float(0) / 60) | round(1) if acts | count > 40 else none }}"
+          focus: "{{ acts[40].focus if acts | count > 40 else none }}"
+          xss: "{{ acts[40].xss | float(0) | round(1) if acts | count > 40 and acts[40].xss is defined else none }}"
+          xss_low: "{{ acts[40].xss_low | float(0) | round(1) if acts | count > 40 and acts[40].xss_low is defined else none }}"
+          xss_high: "{{ acts[40].xss_high | float(0) | round(1) if acts | count > 40 and acts[40].xss_high is defined else none }}"
+          xss_peak: "{{ acts[40].xss_peak | float(0) | round(1) if acts | count > 40 and acts[40].xss_peak is defined else none }}"
+          slot_index: 40
+
+      - name: "Xert Activity 41"
+        unique_id: 0d4e9b8a-7c5d-0e3f-4a2b-1c9d8e7f6a5b
+        availability: "{{ available }}"
+        state: "{{ acts[41].start_date.date if acts | count > 41 else '' }}"
+        attributes:
+          path: "{{ acts[41].path if acts | count > 41 else none }}"
+          name: "{{ acts[41].name if acts | count > 41 else none }}"
+          duration_min: "{{ (acts[41].duration | float(0) / 60) | round(1) if acts | count > 41 else none }}"
+          focus: "{{ acts[41].focus if acts | count > 41 else none }}"
+          xss: "{{ acts[41].xss | float(0) | round(1) if acts | count > 41 and acts[41].xss is defined else none }}"
+          xss_low: "{{ acts[41].xss_low | float(0) | round(1) if acts | count > 41 and acts[41].xss_low is defined else none }}"
+          xss_high: "{{ acts[41].xss_high | float(0) | round(1) if acts | count > 41 and acts[41].xss_high is defined else none }}"
+          xss_peak: "{{ acts[41].xss_peak | float(0) | round(1) if acts | count > 41 and acts[41].xss_peak is defined else none }}"
+          slot_index: 41
+
+      - name: "Xert Activity 42"
+        unique_id: 1e5f0c9b-8d6e-1f4a-5b3c-2d0e9f8a7b6c
+        availability: "{{ available }}"
+        state: "{{ acts[42].start_date.date if acts | count > 42 else '' }}"
+        attributes:
+          path: "{{ acts[42].path if acts | count > 42 else none }}"
+          name: "{{ acts[42].name if acts | count > 42 else none }}"
+          duration_min: "{{ (acts[42].duration | float(0) / 60) | round(1) if acts | count > 42 else none }}"
+          focus: "{{ acts[42].focus if acts | count > 42 else none }}"
+          xss: "{{ acts[42].xss | float(0) | round(1) if acts | count > 42 and acts[42].xss is defined else none }}"
+          xss_low: "{{ acts[42].xss_low | float(0) | round(1) if acts | count > 42 and acts[42].xss_low is defined else none }}"
+          xss_high: "{{ acts[42].xss_high | float(0) | round(1) if acts | count > 42 and acts[42].xss_high is defined else none }}"
+          xss_peak: "{{ acts[42].xss_peak | float(0) | round(1) if acts | count > 42 and acts[42].xss_peak is defined else none }}"
+          slot_index: 42
+
+      - name: "Xert Activity 43"
+        unique_id: 2f6a1d0c-9e7f-2a5b-6c4d-3e1f0a9b8c7d
+        availability: "{{ available }}"
+        state: "{{ acts[43].start_date.date if acts | count > 43 else '' }}"
+        attributes:
+          path: "{{ acts[43].path if acts | count > 43 else none }}"
+          name: "{{ acts[43].name if acts | count > 43 else none }}"
+          duration_min: "{{ (acts[43].duration | float(0) / 60) | round(1) if acts | count > 43 else none }}"
+          focus: "{{ acts[43].focus if acts | count > 43 else none }}"
+          xss: "{{ acts[43].xss | float(0) | round(1) if acts | count > 43 and acts[43].xss is defined else none }}"
+          xss_low: "{{ acts[43].xss_low | float(0) | round(1) if acts | count > 43 and acts[43].xss_low is defined else none }}"
+          xss_high: "{{ acts[43].xss_high | float(0) | round(1) if acts | count > 43 and acts[43].xss_high is defined else none }}"
+          xss_peak: "{{ acts[43].xss_peak | float(0) | round(1) if acts | count > 43 and acts[43].xss_peak is defined else none }}"
+          slot_index: 43
+
+      - name: "Xert Activity 44"
+        unique_id: 3a7b2e1d-0f8a-3b6c-7d5e-4f2a1b0c9d8e
+        availability: "{{ available }}"
+        state: "{{ acts[44].start_date.date if acts | count > 44 else '' }}"
+        attributes:
+          path: "{{ acts[44].path if acts | count > 44 else none }}"
+          name: "{{ acts[44].name if acts | count > 44 else none }}"
+          duration_min: "{{ (acts[44].duration | float(0) / 60) | round(1) if acts | count > 44 else none }}"
+          focus: "{{ acts[44].focus if acts | count > 44 else none }}"
+          xss: "{{ acts[44].xss | float(0) | round(1) if acts | count > 44 and acts[44].xss is defined else none }}"
+          xss_low: "{{ acts[44].xss_low | float(0) | round(1) if acts | count > 44 and acts[44].xss_low is defined else none }}"
+          xss_high: "{{ acts[44].xss_high | float(0) | round(1) if acts | count > 44 and acts[44].xss_high is defined else none }}"
+          xss_peak: "{{ acts[44].xss_peak | float(0) | round(1) if acts | count > 44 and acts[44].xss_peak is defined else none }}"
+          slot_index: 44
+
+      - name: "Xert Activity 45"
+        unique_id: 4b8c3f2e-1a9b-4c7d-8e6f-5a3b2c1d0e9f
+        availability: "{{ available }}"
+        state: "{{ acts[45].start_date.date if acts | count > 45 else '' }}"
+        attributes:
+          path: "{{ acts[45].path if acts | count > 45 else none }}"
+          name: "{{ acts[45].name if acts | count > 45 else none }}"
+          duration_min: "{{ (acts[45].duration | float(0) / 60) | round(1) if acts | count > 45 else none }}"
+          focus: "{{ acts[45].focus if acts | count > 45 else none }}"
+          xss: "{{ acts[45].xss | float(0) | round(1) if acts | count > 45 and acts[45].xss is defined else none }}"
+          xss_low: "{{ acts[45].xss_low | float(0) | round(1) if acts | count > 45 and acts[45].xss_low is defined else none }}"
+          xss_high: "{{ acts[45].xss_high | float(0) | round(1) if acts | count > 45 and acts[45].xss_high is defined else none }}"
+          xss_peak: "{{ acts[45].xss_peak | float(0) | round(1) if acts | count > 45 and acts[45].xss_peak is defined else none }}"
+          slot_index: 45
+
+      - name: "Xert Activity 46"
+        unique_id: 5c9d4a3f-2b0c-5d8e-9f7a-6b4c3d2e1f0a
+        availability: "{{ available }}"
+        state: "{{ acts[46].start_date.date if acts | count > 46 else '' }}"
+        attributes:
+          path: "{{ acts[46].path if acts | count > 46 else none }}"
+          name: "{{ acts[46].name if acts | count > 46 else none }}"
+          duration_min: "{{ (acts[46].duration | float(0) / 60) | round(1) if acts | count > 46 else none }}"
+          focus: "{{ acts[46].focus if acts | count > 46 else none }}"
+          xss: "{{ acts[46].xss | float(0) | round(1) if acts | count > 46 and acts[46].xss is defined else none }}"
+          xss_low: "{{ acts[46].xss_low | float(0) | round(1) if acts | count > 46 and acts[46].xss_low is defined else none }}"
+          xss_high: "{{ acts[46].xss_high | float(0) | round(1) if acts | count > 46 and acts[46].xss_high is defined else none }}"
+          xss_peak: "{{ acts[46].xss_peak | float(0) | round(1) if acts | count > 46 and acts[46].xss_peak is defined else none }}"
+          slot_index: 46
+
+      - name: "Xert Activity 47"
+        unique_id: 6d0e5b4a-3c1d-6e9f-0a8b-7c5d4e3f2a1b
+        availability: "{{ available }}"
+        state: "{{ acts[47].start_date.date if acts | count > 47 else '' }}"
+        attributes:
+          path: "{{ acts[47].path if acts | count > 47 else none }}"
+          name: "{{ acts[47].name if acts | count > 47 else none }}"
+          duration_min: "{{ (acts[47].duration | float(0) / 60) | round(1) if acts | count > 47 else none }}"
+          focus: "{{ acts[47].focus if acts | count > 47 else none }}"
+          xss: "{{ acts[47].xss | float(0) | round(1) if acts | count > 47 and acts[47].xss is defined else none }}"
+          xss_low: "{{ acts[47].xss_low | float(0) | round(1) if acts | count > 47 and acts[47].xss_low is defined else none }}"
+          xss_high: "{{ acts[47].xss_high | float(0) | round(1) if acts | count > 47 and acts[47].xss_high is defined else none }}"
+          xss_peak: "{{ acts[47].xss_peak | float(0) | round(1) if acts | count > 47 and acts[47].xss_peak is defined else none }}"
+          slot_index: 47
+
+      - name: "Xert Activity 48"
+        unique_id: 7e1f6c5b-4d2e-7f0a-1b9c-8d6e5f4a3b2c
+        availability: "{{ available }}"
+        state: "{{ acts[48].start_date.date if acts | count > 48 else '' }}"
+        attributes:
+          path: "{{ acts[48].path if acts | count > 48 else none }}"
+          name: "{{ acts[48].name if acts | count > 48 else none }}"
+          duration_min: "{{ (acts[48].duration | float(0) / 60) | round(1) if acts | count > 48 else none }}"
+          focus: "{{ acts[48].focus if acts | count > 48 else none }}"
+          xss: "{{ acts[48].xss | float(0) | round(1) if acts | count > 48 and acts[48].xss is defined else none }}"
+          xss_low: "{{ acts[48].xss_low | float(0) | round(1) if acts | count > 48 and acts[48].xss_low is defined else none }}"
+          xss_high: "{{ acts[48].xss_high | float(0) | round(1) if acts | count > 48 and acts[48].xss_high is defined else none }}"
+          xss_peak: "{{ acts[48].xss_peak | float(0) | round(1) if acts | count > 48 and acts[48].xss_peak is defined else none }}"
+          slot_index: 48
+
+      - name: "Xert Activity 49"
+        unique_id: 8f2a7d6c-5e3f-8a1b-2c0d-9e7f6a5b4c3d
+        availability: "{{ available }}"
+        state: "{{ acts[49].start_date.date if acts | count > 49 else '' }}"
+        attributes:
+          path: "{{ acts[49].path if acts | count > 49 else none }}"
+          name: "{{ acts[49].name if acts | count > 49 else none }}"
+          duration_min: "{{ (acts[49].duration | float(0) / 60) | round(1) if acts | count > 49 else none }}"
+          focus: "{{ acts[49].focus if acts | count > 49 else none }}"
+          xss: "{{ acts[49].xss | float(0) | round(1) if acts | count > 49 and acts[49].xss is defined else none }}"
+          xss_low: "{{ acts[49].xss_low | float(0) | round(1) if acts | count > 49 and acts[49].xss_low is defined else none }}"
+          xss_high: "{{ acts[49].xss_high | float(0) | round(1) if acts | count > 49 and acts[49].xss_high is defined else none }}"
+          xss_peak: "{{ acts[49].xss_peak | float(0) | round(1) if acts | count > 49 and acts[49].xss_peak is defined else none }}"
+          slot_index: 49

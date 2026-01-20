@@ -117,7 +117,7 @@ class Poller:
             logger.debug("Training info data unchanged")
 
     async def _poll_activities(self, force_send: bool = False) -> None:
-        """Poll and process activities data."""
+        """Poll and process activities data with full details."""
         token = await self.auth.ensure_valid_token()
         if not token:
             logger.warning("No valid token for activities poll")
@@ -126,6 +126,33 @@ class Poller:
         data = await self.api.get_activities(token, lookback_days=self.settings.lookback_days)
         if data is None:
             return
+
+        # Fetch details for each activity (up to 50)
+        activities = data.get("activities", [])
+        if activities:
+            # Sort by start_date descending and take top 50
+            sorted_activities = sorted(
+                [a for a in activities if a.get("start_date", {}).get("date")],
+                key=lambda x: x.get("start_date", {}).get("date", ""),
+                reverse=True,
+            )[:50]
+
+            enriched_activities = []
+            for activity in sorted_activities:
+                path = activity.get("path")
+                if path:
+                    detail = await self.api.get_activity_detail(token, path)
+                    if detail and detail.get("success"):
+                        # Merge detail data into activity
+                        merged = {**activity, **detail}
+                        enriched_activities.append(merged)
+                    else:
+                        enriched_activities.append(activity)
+                else:
+                    enriched_activities.append(activity)
+
+            data = {"success": data.get("success", True), "activities": enriched_activities}
+            logger.info("Enriched %d activities with details", len(enriched_activities))
 
         # Check for data change
         data_hash = _compute_hash(data)
