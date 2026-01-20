@@ -165,6 +165,8 @@ template:
         state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('peak', 0) | float(0) | round(1) }}"
 
   # Activity sensors (slots 0-4)
+  # Note: XSS per activity requires fetching activity details separately.
+  # The activity list only returns: path, name, start_date, duration, focus
   - trigger:
       - platform: event
         event_type: xert_activity_list_update
@@ -172,16 +174,21 @@ template:
       d: "{{ trigger.event.data.data if trigger.event.data.data is mapping else {} }}"
       available: "{{ d.available | default(false) }}"
       root: "{{ d.parsed | default({}) }}"
-      acts: "{{ (root.get('activities') or []) | sort(attribute='ts', reverse=true) | list }}"
+      acts: >-
+        {%- set ac = root.get('activities') or [] -%}
+        {{ ac
+           | selectattr('path', 'defined')
+           | selectattr('start_date', 'defined')
+           | sort(attribute='start_date.date', reverse=true)
+           | list }}
     sensor:
       - name: "Xert Activity 0"
         unique_id: 07266825-c04e-474b-aa0c-8703084f4daa
         availability: "{{ available }}"
-        state: "{{ acts[0].ts | timestamp_local if acts | count > 0 and acts[0].ts else '' }}"
+        state: "{{ acts[0].start_date.date if acts | count > 0 else '' }}"
         attributes:
           path: "{{ acts[0].path if acts | count > 0 else none }}"
           name: "{{ acts[0].name if acts | count > 0 else none }}"
-          xss: "{{ acts[0].xss if acts | count > 0 else none }}"
           duration_min: "{{ (acts[0].duration | float(0) / 60) | round(1) if acts | count > 0 else none }}"
           focus: "{{ acts[0].focus if acts | count > 0 else none }}"
           slot_index: 0
@@ -189,11 +196,10 @@ template:
       - name: "Xert Activity 1"
         unique_id: c35887d4-60fd-4f02-ab17-b7d394da1823
         availability: "{{ available }}"
-        state: "{{ acts[1].ts | timestamp_local if acts | count > 1 and acts[1].ts else '' }}"
+        state: "{{ acts[1].start_date.date if acts | count > 1 else '' }}"
         attributes:
           path: "{{ acts[1].path if acts | count > 1 else none }}"
           name: "{{ acts[1].name if acts | count > 1 else none }}"
-          xss: "{{ acts[1].xss if acts | count > 1 else none }}"
           duration_min: "{{ (acts[1].duration | float(0) / 60) | round(1) if acts | count > 1 else none }}"
           focus: "{{ acts[1].focus if acts | count > 1 else none }}"
           slot_index: 1
@@ -201,11 +207,10 @@ template:
       - name: "Xert Activity 2"
         unique_id: 1a8c30dd-9ba9-4a13-8416-25a8529be088
         availability: "{{ available }}"
-        state: "{{ acts[2].ts | timestamp_local if acts | count > 2 and acts[2].ts else '' }}"
+        state: "{{ acts[2].start_date.date if acts | count > 2 else '' }}"
         attributes:
           path: "{{ acts[2].path if acts | count > 2 else none }}"
           name: "{{ acts[2].name if acts | count > 2 else none }}"
-          xss: "{{ acts[2].xss if acts | count > 2 else none }}"
           duration_min: "{{ (acts[2].duration | float(0) / 60) | round(1) if acts | count > 2 else none }}"
           focus: "{{ acts[2].focus if acts | count > 2 else none }}"
           slot_index: 2
@@ -213,11 +218,10 @@ template:
       - name: "Xert Activity 3"
         unique_id: bb237cad-0f03-410e-b981-3241116c27f5
         availability: "{{ available }}"
-        state: "{{ acts[3].ts | timestamp_local if acts | count > 3 and acts[3].ts else '' }}"
+        state: "{{ acts[3].start_date.date if acts | count > 3 else '' }}"
         attributes:
           path: "{{ acts[3].path if acts | count > 3 else none }}"
           name: "{{ acts[3].name if acts | count > 3 else none }}"
-          xss: "{{ acts[3].xss if acts | count > 3 else none }}"
           duration_min: "{{ (acts[3].duration | float(0) / 60) | round(1) if acts | count > 3 else none }}"
           focus: "{{ acts[3].focus if acts | count > 3 else none }}"
           slot_index: 3
@@ -225,11 +229,10 @@ template:
       - name: "Xert Activity 4"
         unique_id: 9bfa9864-3bfc-4fc0-ba17-0d68520b8a49
         availability: "{{ available }}"
-        state: "{{ acts[4].ts | timestamp_local if acts | count > 4 and acts[4].ts else '' }}"
+        state: "{{ acts[4].start_date.date if acts | count > 4 else '' }}"
         attributes:
           path: "{{ acts[4].path if acts | count > 4 else none }}"
           name: "{{ acts[4].name if acts | count > 4 else none }}"
-          xss: "{{ acts[4].xss if acts | count > 4 else none }}"
           duration_min: "{{ (acts[4].duration | float(0) / 60) | round(1) if acts | count > 4 else none }}"
           focus: "{{ acts[4].focus if acts | count > 4 else none }}"
           slot_index: 4
