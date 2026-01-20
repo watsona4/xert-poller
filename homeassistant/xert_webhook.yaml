@@ -1,0 +1,235 @@
+# =============================================================================
+# Xert Webhook Package
+# =============================================================================
+# This package consumes webhooks from the external xert-poller container.
+# All API polling is handled externally - this just defines sensors that
+# receive the webhook data.
+#
+# Setup:
+# 1. Generate a webhook ID and add to secrets.yaml:
+#    xert_webhook_id: "your-random-webhook-id-here"
+#
+# 2. Configure the xert-poller container with:
+#    XERT_HA_WEBHOOK_ID=your-random-webhook-id-here
+#
+# =============================================================================
+
+# Webhook trigger automation that fires events
+automation:
+  - id: xert_webhook_handler
+    alias: "Xert: Webhook Handler"
+    mode: queued
+    max: 10
+    trigger:
+      - platform: webhook
+        webhook_id: !secret xert_webhook_id
+        allowed_methods:
+          - POST
+        local_only: true
+    variables:
+      event_type: "{{ trigger.json.event_type }}"
+      data: "{{ trigger.json.data }}"
+    action:
+      - choose:
+          - conditions: "{{ event_type == 'xert_training_info_update' }}"
+            sequence:
+              - event: xert_training_info_update
+                event_data:
+                  data: "{{ data }}"
+          - conditions: "{{ event_type == 'xert_activity_list_update' }}"
+            sequence:
+              - event: xert_activity_list_update
+                event_data:
+                  data: "{{ data }}"
+
+template:
+  # Training Info from webhook
+  - trigger:
+      - platform: event
+        event_type: xert_training_info_update
+    variables:
+      d: "{{ trigger.event.data.data if trigger.event.data.data is mapping else {} }}"
+      available: "{{ d.available | default(false) }}"
+      root: "{{ d.parsed | default({}) }}"
+    sensor:
+      - name: Xert Training Info Raw
+        unique_id: xert_training_info_raw_webhook
+        state: "{{ root.success | default(false) }}"
+        availability: "{{ available }}"
+        attributes:
+          signature: "{{ root.get('signature') }}"
+          status: "{{ root.get('status') }}"
+          tl: "{{ root.get('tl') }}"
+          targetXSS: "{{ root.get('targetXSS') }}"
+          wotd: "{{ root.get('wotd') }}"
+          weight: "{{ root.get('weight') }}"
+          source: "{{ root.get('source') }}"
+
+  # Activity List from webhook
+  - trigger:
+      - platform: event
+        event_type: xert_activity_list_update
+    variables:
+      d: "{{ trigger.event.data.data if trigger.event.data.data is mapping else {} }}"
+      available: "{{ d.available | default(false) }}"
+      root: "{{ d.parsed | default({}) }}"
+    sensor:
+      - name: Xert Activity List Raw
+        unique_id: xert_activity_list_raw_webhook
+        state: "{{ root.success | default(false) }}"
+        availability: "{{ available }}"
+        attributes:
+          activities: "{{ root.get('activities') }}"
+          count: "{{ (root.get('activities') or []) | count }}"
+
+  # Derived sensors from Training Info
+  - sensor:
+      - name: "Xert Training Status"
+        unique_id: xert_training_status_webhook
+        state: "{{ state_attr('sensor.xert_training_info_raw', 'status') or 'Unknown' }}"
+        icon: mdi:heart-pulse
+
+      - name: "Xert FTP"
+        unique_id: xert_ftp_webhook
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('ftp', 0) | float(0) | round(0) }}"
+
+      - name: "Xert LTP"
+        unique_id: xert_ltp_webhook
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('ltp', 0) | float(0) | round(0) }}"
+
+      - name: "Xert Peak Power"
+        unique_id: xert_peak_power_webhook
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('pp', 0) | float(0) | round(0) }}"
+
+      - name: "Xert HIE"
+        unique_id: xert_hie_webhook
+        unit_of_measurement: "kJ"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'signature') or {}).get('hie', 0) | float(0) | round(2) }}"
+
+      - name: "Xert TL Low"
+        unique_id: xert_tl_low_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('low', 0) | float(0) | round(1) }}"
+
+      - name: "Xert TL High"
+        unique_id: xert_tl_high_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('high', 0) | float(0) | round(1) }}"
+
+      - name: "Xert TL Peak"
+        unique_id: xert_tl_peak_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('peak', 0) | float(0) | round(1) }}"
+
+      - name: "Xert TL Total"
+        unique_id: xert_tl_total_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'tl') or {}).get('total', 0) | float(0) | round(1) }}"
+
+      - name: "Xert Target XSS Total"
+        unique_id: xert_target_xss_total_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('total', 0) | float(0) | round(1) }}"
+
+      - name: "Xert Target XSS Low"
+        unique_id: xert_target_xss_low_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('low', 0) | float(0) | round(1) }}"
+
+      - name: "Xert Target XSS High"
+        unique_id: xert_target_xss_high_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('high', 0) | float(0) | round(1) }}"
+
+      - name: "Xert Target XSS Peak"
+        unique_id: xert_target_xss_peak_webhook
+        unit_of_measurement: "XSS"
+        state_class: measurement
+        state: "{{ (state_attr('sensor.xert_training_info_raw', 'targetXSS') or {}).get('peak', 0) | float(0) | round(1) }}"
+
+  # Activity sensors (slots 0-4)
+  - trigger:
+      - platform: event
+        event_type: xert_activity_list_update
+    variables:
+      d: "{{ trigger.event.data.data if trigger.event.data.data is mapping else {} }}"
+      available: "{{ d.available | default(false) }}"
+      root: "{{ d.parsed | default({}) }}"
+      acts: "{{ (root.get('activities') or []) | sort(attribute='ts', reverse=true) | list }}"
+    sensor:
+      - name: "Xert Activity 0"
+        unique_id: xert_activity_0_webhook
+        availability: "{{ available }}"
+        state: "{{ acts[0].ts | timestamp_local if acts | count > 0 and acts[0].ts else '' }}"
+        attributes:
+          path: "{{ acts[0].path if acts | count > 0 else none }}"
+          name: "{{ acts[0].name if acts | count > 0 else none }}"
+          xss: "{{ acts[0].xss if acts | count > 0 else none }}"
+          duration_min: "{{ (acts[0].duration | float(0) / 60) | round(1) if acts | count > 0 else none }}"
+          focus: "{{ acts[0].focus if acts | count > 0 else none }}"
+          slot_index: 0
+
+      - name: "Xert Activity 1"
+        unique_id: xert_activity_1_webhook
+        availability: "{{ available }}"
+        state: "{{ acts[1].ts | timestamp_local if acts | count > 1 and acts[1].ts else '' }}"
+        attributes:
+          path: "{{ acts[1].path if acts | count > 1 else none }}"
+          name: "{{ acts[1].name if acts | count > 1 else none }}"
+          xss: "{{ acts[1].xss if acts | count > 1 else none }}"
+          duration_min: "{{ (acts[1].duration | float(0) / 60) | round(1) if acts | count > 1 else none }}"
+          focus: "{{ acts[1].focus if acts | count > 1 else none }}"
+          slot_index: 1
+
+      - name: "Xert Activity 2"
+        unique_id: xert_activity_2_webhook
+        availability: "{{ available }}"
+        state: "{{ acts[2].ts | timestamp_local if acts | count > 2 and acts[2].ts else '' }}"
+        attributes:
+          path: "{{ acts[2].path if acts | count > 2 else none }}"
+          name: "{{ acts[2].name if acts | count > 2 else none }}"
+          xss: "{{ acts[2].xss if acts | count > 2 else none }}"
+          duration_min: "{{ (acts[2].duration | float(0) / 60) | round(1) if acts | count > 2 else none }}"
+          focus: "{{ acts[2].focus if acts | count > 2 else none }}"
+          slot_index: 2
+
+      - name: "Xert Activity 3"
+        unique_id: xert_activity_3_webhook
+        availability: "{{ available }}"
+        state: "{{ acts[3].ts | timestamp_local if acts | count > 3 and acts[3].ts else '' }}"
+        attributes:
+          path: "{{ acts[3].path if acts | count > 3 else none }}"
+          name: "{{ acts[3].name if acts | count > 3 else none }}"
+          xss: "{{ acts[3].xss if acts | count > 3 else none }}"
+          duration_min: "{{ (acts[3].duration | float(0) / 60) | round(1) if acts | count > 3 else none }}"
+          focus: "{{ acts[3].focus if acts | count > 3 else none }}"
+          slot_index: 3
+
+      - name: "Xert Activity 4"
+        unique_id: xert_activity_4_webhook
+        availability: "{{ available }}"
+        state: "{{ acts[4].ts | timestamp_local if acts | count > 4 and acts[4].ts else '' }}"
+        attributes:
+          path: "{{ acts[4].path if acts | count > 4 else none }}"
+          name: "{{ acts[4].name if acts | count > 4 else none }}"
+          xss: "{{ acts[4].xss if acts | count > 4 else none }}"
+          duration_min: "{{ (acts[4].duration | float(0) / 60) | round(1) if acts | count > 4 else none }}"
+          focus: "{{ acts[4].focus if acts | count > 4 else none }}"
+          slot_index: 4

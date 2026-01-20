@@ -1,0 +1,20 @@
+services:
+  xert-poller:
+    build: .
+    container_name: xert-poller
+    restart: unless-stopped
+    environment:
+      - XERT_USERNAME=${XERT_USERNAME}
+      - XERT_PASSWORD=${XERT_PASSWORD}
+      - XERT_HA_URL=${XERT_HA_URL:-http://homeassistant:8123}
+      - XERT_HA_WEBHOOK_ID=${XERT_HA_WEBHOOK_ID}
+      - XERT_HA_TOKEN=${XERT_HA_TOKEN:-}
+      - XERT_TRAINING_INFO_INTERVAL=${XERT_TRAINING_INFO_INTERVAL:-900}
+      - XERT_ACTIVITIES_INTERVAL=${XERT_ACTIVITIES_INTERVAL:-900}
+      - XERT_LOOKBACK_DAYS=${XERT_LOOKBACK_DAYS:-90}
+      - XERT_LOG_LEVEL=${XERT_LOG_LEVEL:-INFO}
+    volumes:
+      - xert-data:/data
+
+volumes:
+  xert-data:
